@@ -40,7 +40,7 @@ const CategorySlider = ({categories}: { categories: Category[] }) => {
                     className="scrollbar-hide flex gap-8 overflow-x-auto scroll-smooth px-12 scrollbar-hide"
                 >
                     {/*Item*/}
-                    {categories.map((category) => <CategoryItem category={category}/>)}
+                    {categories.map((category) => <CategoryItem key={category.id} category={category}/>)}
                 </div>
 
                 {/*Button Right*/}
