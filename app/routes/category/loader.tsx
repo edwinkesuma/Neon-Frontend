@@ -8,7 +8,7 @@ export async function loader({params}: LoaderFunctionArgs): Promise<PaginatedPro
 
     const baseUrl = import.meta.env.VITE_API_URL;
 
-    const productRes = await fetch(`${baseUrl}/api/v1/products/${categoryId}?sortBy=price&sortOrder=desc&pageSize=20`);
+    const productRes = await fetch(`${baseUrl}/api/v1/products/category/${categoryId}?sortBy=price&sortOrder=desc&pageSize=20`);
 
     return productRes.json();
 }
