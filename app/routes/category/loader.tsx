@@ -10,5 +10,5 @@ export async function loader({params}: LoaderFunctionArgs): Promise<PaginatedPro
 
     const productRes = await fetch(`${baseUrl}/api/v1/products/category/${categoryId}?sortBy=price&sortOrder=desc&pageSize=20`);
 
-    return productRes.json();
+    return await productRes.json();
 }
