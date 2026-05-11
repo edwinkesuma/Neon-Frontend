@@ -5,7 +5,7 @@ export default [
         index("routes/home/index.tsx"),
         route("categories/:id/:name", "routes/category/details.tsx"),
         route("products/:id", "routes/product/details.tsx"),
-        route("/admin/categories/:id", "routes/admin/category/edit.tsx")
+        route("/admin/categories/:id/edit", "routes/admin/category/edit.tsx")
     ]),
     layout("./routes/layout/dashboard.tsx", [
         route("/admin/categories", "routes/admin/category/index.tsx"),
