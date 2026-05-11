@@ -9,11 +9,11 @@ const DashboardLayout = () => {
         <main className="flex flex-row max-w-6xl mx-auto px-6 py-8">
             <nav className="flex flex-col border-r-4 border-red-600 w-37.5">
                 <NavLink className={({isActive}) => isActive ? active : base}
-                         to="/admin/categories">Category</NavLink>
-                <NavLink className={({isActive}) => isActive ? active : base} to="/admin/products">Product</NavLink>
+                         to="/admin/categories">Categories</NavLink>
+                <NavLink className={({isActive}) => isActive ? active : base} to="/admin/products">Products</NavLink>
 
             </nav>
-            <section>
+            <section className="w-full">
                 <Outlet/>
             </section>
         </main>
