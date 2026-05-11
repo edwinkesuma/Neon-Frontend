@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import CategoryItem from "~/components/CategoryItem";
-import type {Category} from "~/routes/home/types";
+import type {Category} from "~/types";
 
 const CategorySlider = ({categories}: { categories: Category[] }) => {
     const sliderRef = useRef<HTMLDivElement | null>(null);

@@ -1,6 +1,6 @@
 import React from 'react';
-import type {Category} from "~/routes/home/types";
 import {Link} from "react-router";
+import type { Category } from "~/types";
 
 const CategoryItem = ({category}: { category: Category }) => {
     return (
