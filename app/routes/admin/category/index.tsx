@@ -14,7 +14,7 @@ const CategoryDashboard = () => {
     return (
         <main className="flex flex-col justify-center align-middle px-5">
             <div className="mb-5">
-                <Link to="/admin/categories/:id"><Button isPrimary={true}><FaSquarePlus/> Create a Category</Button></Link>
+                <Link to="/admin/categories/create"><Button isPrimary={true}><FaSquarePlus/> Create a Category</Button></Link>
             </div>
             {
                 categories.content.map(category => <CategoryDashboardItem

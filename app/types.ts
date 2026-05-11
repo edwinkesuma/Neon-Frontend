@@ -51,3 +51,8 @@ export interface ProductDetail {
     price: number;
     discountPercentage: number;
 }
+
+export interface CategoryFormData {
+    name: string;
+    image: File | string;
+}

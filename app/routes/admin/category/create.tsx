@@ -1,25 +1,21 @@
 import React, {useRef, useState} from 'react';
-import {useLoaderData, useParams} from "react-router";
-import type {categoryDetailsLoader} from "~/routes/admin/category/loader";
 import Button from "~/components/Button";
 import type {CategoryFormData} from "~/types";
+import {MdImageNotSupported} from "react-icons/md";
+import {useNavigate} from "react-router";
 
-export {categoryDetailsLoader as loader} from "./loader";
-
-const EditCategoryPage = () => {
-    const category = useLoaderData<typeof categoryDetailsLoader>();
-
-    const {id} = useParams();
+const CreateCategoryPage = () => {
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<CategoryFormData>({
-        name: category.name,
-        image: category.imageUrl,
+        name: "",
+        image: ""
     });
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const [previewImage, setPreviewImage] = useState(category.imageUrl);
+    const [previewImage, setPreviewImage] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
 
     const handlePickImage = () => {
@@ -71,9 +67,9 @@ const EditCategoryPage = () => {
             }
 
             const response = await fetch(
-                `http://localhost:8080/api/v1/categories/${id}`,
+                `http://localhost:8080/api/v1/categories`,
                 {
-                    method: "PUT",
+                    method: "POST",
                     body: body,
                 }
             );
@@ -84,6 +80,7 @@ const EditCategoryPage = () => {
 
             alert("Success update category");
 
+            navigate("/");
         } catch (e) {
             console.error(e);
         } finally {
@@ -92,7 +89,7 @@ const EditCategoryPage = () => {
     }
 
     return (
-        <div className="flex justify-center p-6">
+        <main className="flex justify-center p-6">
             <form
                 onSubmit={handleSubmit}
                 className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-lg border border-gray-200"
@@ -141,13 +138,13 @@ const EditCategoryPage = () => {
                         {/* Preview Image */}
                         <div
                             onClick={handlePickImage}
-                            className="cursor-pointer overflow-hidden rounded-2xl border border-gray-300 hover:opacity-80 transition w-50"
+                            className="flex justify-center items-center cursor-pointer overflow-hidden rounded-2xl border border-gray-300 hover:opacity-80 transition w-50 h-50"
                         >
-                            <img
+                            {previewImage == "" ? <MdImageNotSupported className="text-gray-500 text-5xl"/> : <img
                                 src={previewImage}
-                                alt={category.name}
+                                alt="Category image"
                                 className="aspect-square image-rendering-auto"
-                            />
+                            />}
                         </div>
 
                         <p className="text-sm text-gray-500">
@@ -162,11 +159,11 @@ const EditCategoryPage = () => {
                     <Button
                         type="submit"
                         disabled={loading}
-                        isPrimary={true}>{loading ? "Updating..." : "Update Category"}</Button>
+                        isPrimary={true}>{loading ? "Creating..." : "Create Category"}</Button>
                 </div>
             </form>
-        </div>
+        </main>
     );
 };
 
-export default EditCategoryPage;
+export default CreateCategoryPage;
