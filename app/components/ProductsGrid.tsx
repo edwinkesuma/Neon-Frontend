@@ -1,6 +1,6 @@
 import React from 'react';
-import type {Product} from "~/routes/home/types";
 import ProductItem from "~/components/ProductItem";
+import type {Product} from "~/types";
 
 const ProductsGrid = ({products}: { products: Product[] }) => {
     return (

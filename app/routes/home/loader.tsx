@@ -1,4 +1,4 @@
-import type { HomeLoaderData } from "~/routes/home/types";
+import type {HomeLoaderData} from "~/types";
 
 export async function loader(): Promise<HomeLoaderData> {
     console.log("LOADER JALAN");

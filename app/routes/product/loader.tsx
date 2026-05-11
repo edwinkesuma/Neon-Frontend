@@ -1,5 +1,5 @@
 import type {LoaderFunctionArgs} from "react-router";
-import type {ProductDetail} from "~/routes/product/types";
+import type {ProductDetail} from "~/types";
 
 export async function loader({params}: LoaderFunctionArgs): Promise<ProductDetail> {
     console.log("PRODUCT LOADER JALAN");

@@ -7,7 +7,7 @@ export default [
         route("products/:id", "routes/product/details.tsx"),
     ]),
     layout("./routes/layout/dashboard.tsx", [
-        route("/admin/categories","routes/admin/category.tsx"),
+        route("/admin/categories","routes/admin/category/index.tsx"),
         route("/admin/products","routes/admin/product.tsx")
     ])
 ] satisfies RouteConfig;

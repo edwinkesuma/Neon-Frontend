@@ -1,6 +1,6 @@
 import React from 'react';
 import type {Route} from "./+types/index";
-import {useLoaderData} from "react-router";
+import {Link, useLoaderData} from "react-router";
 import type {loader} from "./loader";
 import CategorySlider from "~/components/CategorySlider";
 import ProductsGrid from "~/components/ProductsGrid";
@@ -19,6 +19,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <Link to="/admin/categories">ADMIN</Link>
             <CategorySlider categories={categories.content}/>
             <ProductsGrid products={products.content}/>
         </div>

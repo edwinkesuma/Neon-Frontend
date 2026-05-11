@@ -1,5 +1,5 @@
 import type {LoaderFunctionArgs} from "react-router";
-import type {PaginatedProductsResponse} from "~/routes/category/types";
+import type {PaginatedProductsResponse} from "~/types";
 
 export async function loader({params}: LoaderFunctionArgs): Promise<PaginatedProductsResponse> {
     console.log("CATEGORY LOADER JALAN");
