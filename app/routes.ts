@@ -10,6 +10,6 @@ export default [
     ]),
     layout("./routes/layout/dashboard.tsx", [
         route("/admin/categories", "routes/admin/category/index.tsx"),
-        route("/admin/products", "routes/admin/product.tsx"),
+        route("/admin/products", "routes/admin/product/index.tsx"),
     ])
 ] satisfies RouteConfig;
