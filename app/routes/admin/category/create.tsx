@@ -5,6 +5,7 @@ import {MdImageNotSupported} from "react-icons/md";
 import {useNavigate} from "react-router";
 
 const CreateCategoryPage = () => {
+    const baseUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -67,7 +68,7 @@ const CreateCategoryPage = () => {
             }
 
             const response = await fetch(
-                `http://localhost:8080/api/v1/categories`,
+                `${baseUrl}/api/v1/categories`,
                 {
                     method: "POST",
                     body: body,
@@ -95,7 +96,7 @@ const CreateCategoryPage = () => {
                 className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-lg border border-gray-200"
             >
                 <h1 className="mb-6 text-2xl font-bold text-gray-800">
-                    Edit Category
+                    Create Category
                 </h1>
 
                 {/* Category Name */}
