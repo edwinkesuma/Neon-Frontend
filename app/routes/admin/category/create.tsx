@@ -76,10 +76,10 @@ const CreateCategoryPage = () => {
             );
 
             if (!response.ok) {
-                throw new Error("Failed update category");
+                throw new Error("Failed create category");
             }
 
-            alert("Success update category");
+            alert("Success create category");
 
             navigate("/");
         } catch (e) {

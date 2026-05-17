@@ -56,3 +56,17 @@ export interface CategoryFormData {
     name: string;
     image: File | string;
 }
+
+export interface ProductFormData {
+    name: string;
+    description: string;
+    price: string;
+    discountPercentage: string;
+    stock: string;
+    categoryId: string;
+}
+
+export interface SimpleCategories {
+    id: string;
+    name: string;
+}

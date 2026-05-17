@@ -41,7 +41,7 @@ const ProductDashboard = () => {
     return (
         <main className="flex flex-col justify-center align-middle px-5">
             <div className="mb-5">
-                <Link to="/admin/categories/create"><Button isPrimary={true}><FaSquarePlus/> Create a Product</Button></Link>
+                <Link to="/admin/products/create"><Button isPrimary={true}><FaSquarePlus/> Create a Product</Button></Link>
             </div>
             {
                 products.map(product => <ProductDashboardItem
