@@ -1,14 +1,131 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {MdImageNotSupported} from "react-icons/md";
 import Button from "~/components/Button";
-import {useNavigate} from "react-router";
-import type {ProductFormData, SimpleCategories} from "~/types";
+import {useLoaderData, useNavigate, useParams} from "react-router";
+import type {ProductFormData, ProductImageItem, SimpleCategories} from "~/types";
+import type {productDetailsLoader} from "~/routes/admin/product/loader";
+import {FaTrash} from "react-icons/fa";
 
-const CreateProductPage = () => {
+export {productDetailsLoader as loader} from "./loader";
+
+const EditProductPage = () => {
+    const product = useLoaderData<typeof productDetailsLoader>();
+
+    const {id} = useParams();
+
     const baseUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
     const [categories, setCategories] = useState<SimpleCategories[]>([]);
+    const [images, setImages] = useState<ProductImageItem[]>([]);
+
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState<ProductFormData>({
+        name: product.name,
+        description: product.description,
+        price: product.price.toString(),
+        discountPercentage: product.discountPercentage.toString(),
+        stock: product.stock.toString(),
+        categoryId: product.categoryId ?? ""
+    });
+
+    const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+    const handlePickImage = (index: number) => {
+        fileInputRefs.current[index]?.click();
+    }
+
+    const handleChangeImage = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        index: number
+    ) => {
+
+        const file = e.target.files?.[0];
+
+        if (!file) return;
+
+        setImages(prevState => {
+            const temporaryImage: ProductImageItem = {
+                preview: URL.createObjectURL(file),
+                file: file
+            };
+            return [...prevState, temporaryImage];
+        });
+    }
+
+    const handleDeleteImage = (idx: number) => {
+        setImages(prev =>
+            prev.filter((_, index) => index !== idx)
+        );
+    };
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+
+        e.preventDefault();
+
+        console.log("submit");
+
+        try {
+
+            setLoading(true);
+
+            const body = new FormData();
+
+            const existingImages = images
+                .filter(img => img.existingUrl)
+                .map(img => img.existingUrl);
+
+            const newFiles = images
+                .filter(img => img.file)
+                .map(img => img.file);
+
+            body.append(
+                "product",
+                new Blob(
+                    [
+                        JSON.stringify({
+                            name: formData.name,
+                            description: formData.description,
+                            price: Number(formData.price),
+                            discountPercentage: Number(formData.discountPercentage),
+                            stock: Number(formData.stock),
+                            categoryId: formData.categoryId,
+                            existingImages: existingImages
+                        }),
+                    ],
+                    {type: "application/json"}
+                )
+            );
+
+            newFiles.forEach((file) => {
+                if (file) {
+                    body.append("images", file);
+                }
+            });
+
+            const response = await fetch(
+                `${baseUrl}/api/v1/products/${id}`,
+                {
+                    method: "PUT",
+                    body: body,
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed update product");
+            }
+
+            alert("Success update product");
+
+            navigate("/");
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -25,110 +142,20 @@ const CreateProductPage = () => {
             }
         };
 
+        const setImagePreviews = () => {
+            const tempImages: ProductImageItem[] =
+                product.images.map(image => ({
+                    preview: image.imageUrl,
+                    existingUrl: image.imageUrl
+                }));
+
+            setImages(tempImages);
+        };
+
+
         fetchCategories();
+        setImagePreviews();
     }, []);
-
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<ProductFormData>({
-        name: "",
-        description: "",
-        price: "",
-        discountPercentage: "",
-        stock: "",
-        categoryId: ""
-    });
-    const [imagesPreview, setImagesPreview] = useState<string[]>(["", "", ""]);
-
-    const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-    const [imageFiles, setImageFiles] = useState<(File | null)[]>([]);
-
-    const handlePickImage = (index: number) => {
-        fileInputRefs.current[index]?.click();
-    }
-
-    const handleChangeImage = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        index: number
-    ) => {
-
-        const file = e.target.files?.[0];
-
-        if (!file) return;
-
-        // save file
-        setImageFiles(prevState => {
-            const updated = [...prevState];
-            updated[index] = file;
-            return updated;
-        });
-
-        // preview image
-        setImagesPreview(prevState => {
-            const updated = [...prevState];
-            updated[index] = URL.createObjectURL(file);
-            return updated;
-        });
-    }
-
-    const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
-
-        e.preventDefault();
-
-        console.log("submit");
-
-        try {
-
-            setLoading(true);
-
-            const body = new FormData();
-
-            body.append(
-                "product",
-                new Blob(
-                    [
-                        JSON.stringify({
-                            name: formData.name,
-                            description: formData.description,
-                            price: Number(formData.price),
-                            discountPercentage: Number(formData.discountPercentage),
-                            stock: Number(formData.stock),
-                            categoryId: formData.categoryId
-                        }),
-                    ],
-                    {type: "application/json"}
-                )
-            );
-
-            imageFiles.forEach((file) => {
-                if (file) {
-                    body.append("images", file);
-                }
-            });
-
-            const response = await fetch(
-                `${baseUrl}/api/v1/products`,
-                {
-                    method: "POST",
-                    body: body,
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Failed create product");
-            }
-
-            alert("Success create product");
-
-            navigate("/");
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
-        }
-    }
 
     return (
         <main className="flex justify-center p-6">
@@ -137,7 +164,7 @@ const CreateProductPage = () => {
                 className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-lg border border-gray-200"
             >
                 <h1 className="mb-6 text-2xl font-bold text-gray-800">
-                    Create Product
+                    Update Product
                 </h1>
 
                 {/* Product Name */}
@@ -316,30 +343,45 @@ const CreateProductPage = () => {
                     </label>
 
                     <div className="flex flex-row justify-between">
-                        {Array.from({length: 3}).map((item, index) => <div key={index} className="space-y-4">
+                        {Array.from({length: 3}).map((item, index) => <div key={index} className="relative">
+                            <div className="space-y-4">
+                                {/* Hidden Input */}
+                                <input
+                                    ref={(el) => {
+                                        fileInputRefs.current[index] = el;
+                                    }}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleChangeImage(e, index)}
+                                    className="hidden"
+                                />
 
-                            {/* Hidden Input */}
-                            <input
-                                ref={(el) => {
-                                    fileInputRefs.current[index] = el;
-                                }}
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleChangeImage(e, index)}
-                                className="hidden"
-                            />
-
-                            {/* Preview Image */}
-                            <div
-                                onClick={() => handlePickImage(index)}
-                                className="flex items-center justify-center cursor-pointer overflow-hidden rounded-2xl border border-gray-300 hover:opacity-80 transition w-30 h-30"
-                            >
-                                {imagesPreview[index] !== "" ? <img
-                                    src={imagesPreview[index]}
-                                    alt={`product image: ${index}`}
-                                    className="aspect-square image-rendering-auto"
-                                /> : <MdImageNotSupported className="text-gray-500 text-4xl"/>}
+                                {/* Preview Image */}
+                                <div
+                                    onClick={() => handlePickImage(index)}
+                                    className="flex items-center justify-center cursor-pointer overflow-hidden rounded-2xl border border-gray-300 hover:opacity-80 transition w-30 h-30"
+                                >
+                                    {images[index]?.preview ? (
+                                        <img
+                                            src={images[index].preview}
+                                            alt={`product image: ${index}`}
+                                            className="aspect-square image-rendering-auto"
+                                        />
+                                    ) : (
+                                        <MdImageNotSupported className="text-gray-500 text-4xl"/>
+                                    )}
+                                </div>
                             </div>
+
+                            {images[index]?.preview ? (
+                                <button
+                                    type="button"
+                                    className="absolute flex justify-center items-center h-7 w-7 top-1 text-xs right-1 bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:cursor-pointer"
+                                    onClick={() => handleDeleteImage(index)}
+                                >
+                                    <FaTrash/>
+                                </button>
+                            ) : null}
 
 
                         </div>)}
@@ -355,11 +397,11 @@ const CreateProductPage = () => {
                     <Button
                         type="submit"
                         disabled={loading}
-                        isPrimary={true}>{loading ? "Creating..." : "Create Product"}</Button>
+                        isPrimary={true}>{loading ? "Creating..." : "Update Product"}</Button>
                 </div>
             </form>
         </main>
     );
 };
 
-export default CreateProductPage;
+export default EditProductPage;

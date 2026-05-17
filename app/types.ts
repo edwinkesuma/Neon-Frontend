@@ -50,6 +50,7 @@ export interface ProductDetail {
     stock: number;
     price: number;
     discountPercentage: number;
+    categoryId: string | null;
 }
 
 export interface CategoryFormData {
@@ -69,4 +70,11 @@ export interface ProductFormData {
 export interface SimpleCategories {
     id: string;
     name: string;
+}
+
+export interface ProductImageItem {
+    id?: string,
+    preview: string,
+    file?: File,
+    existingUrl?: string
 }

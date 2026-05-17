@@ -17,7 +17,7 @@ const ProductDashboardItem = ({product, onDelete}: ProductDashboardItemProps) =>
                 <h2 className="text-xl font-semibold line-clamp-2">{product.name}</h2>
                 <div className="flex flex-row gap-5">
                     <Link
-                        to={`/admin/categories/${product.id}/edit`}
+                        to={`/admin/products/${product.id}/edit`}
                         className="flex flex-row items-center justify-center text-md text-gray-500 align-middle gap-1 transition hover:text-red-600 hover:cursor-pointer"
                     >
                         <FaEdit/>
