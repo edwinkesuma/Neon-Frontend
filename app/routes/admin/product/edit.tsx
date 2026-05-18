@@ -49,7 +49,9 @@ const EditProductPage = () => {
                 preview: URL.createObjectURL(file),
                 file: file
             };
-            return [...prevState, temporaryImage];
+            const newImages = [...prevState];
+            newImages[index] = temporaryImage;
+            return newImages;
         });
     }
 
@@ -397,7 +399,7 @@ const EditProductPage = () => {
                     <Button
                         type="submit"
                         disabled={loading}
-                        isPrimary={true}>{loading ? "Creating..." : "Update Product"}</Button>
+                        isPrimary={true}>{loading ? "Updating..." : "Update Product"}</Button>
                 </div>
             </form>
         </main>
